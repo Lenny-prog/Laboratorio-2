@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Informe de Plagio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .result-container {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow-y: auto;
+      max-height: 70vh;
+    }
+    .paragraph-comparison {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-left: 6px solid #fff;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #000;
+    }
+    .paragraph-comparison.high-plagio {
+      border-left-color: #7b1fa2;
+      background: rgba(123, 31, 162, 0.2);
+      color: #fff;
+    }
+    .paragraph-comparison.low-plagio {
+      border-left-color: #fff176;
+      background: rgba(255, 241, 118, 0.2);
+      color: #000;
+    }
+    .paragraph-comparison p {
+      margin: 0.3rem 0;
+      line-height: 1.4;
+    }
+    .score {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+    }
+    .btn-back {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 24px;
+      border: none;
+      cursor: pointer;
+      background: #fff;
+      color: #2575fc;
+      box-shadow: 0 6px 18px rgba(255,255,255,0.5);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    .btn-back:hover {
+      background: #1a52d8;
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(26,82,216,0.8);
+    }
+    #graficoPlagio, #graficoBarras {
+      max-width: 600px;
+      width: 100%;
+      height: 300px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 2rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (max-width: 480px) {
+      .result-container {
+        padding: 1rem;
+        max-height: 60vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Informe de Análisis de Plagio</h1>
+
+  <!-- Riqueza léxica -->
+  <div style="margin-bottom: 2rem; background: rgba(255, 255, 255, 0.15); padding: 1rem 2rem; border-radius: 12px; max-width: 700px; width: 100%; text-align: center; backdrop-filter: blur(10px);">
+    <p><strong>Riqueza léxica del Documento 1:</strong> {{ riqueza1 }}</p>
+    <p><strong>Riqueza léxica del Documento 2:</strong> {{ riqueza2 }}</p>
+  </div>
+
+  <div class="result-container">
+    {% if resultados %}
+      {% for item in resultados %}
+        <div class="paragraph-comparison
+          {% if item.score > 75 %}
+            high-plagio
+          {% else %}
+            low-plagio
+          {% endif %}
+        ">
+          <div class="score">Similaridad: {{ item.score }}%</div>
+          <p><strong>Párrafo 1:</strong> {{ item.parrafo1 }}</p>
+          <p><strong>Párrafo 2:</strong> {{ item.parrafo2 }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No se encontraron resultados para mostrar.</p>
+    {% endif %}
+  </div>
+
+  <!-- Elemento oculto con los datos para JS -->
+  <div id="datos-plagio" data-alto="{{ alto }}" data-bajo="{{ bajo }}"></div>
+
+  <!-- Gráficos -->
+  <canvas id="graficoPlagio"></canvas>
+  <canvas id="graficoBarras"></canvas>
+
+  <a href="/" class="btn-back">← Volver al inicio</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const datos = document.getElementById('datos-plagio');
+    const alto = parseInt(datos.dataset.alto);
+    const bajo = parseInt(datos.dataset.bajo);
+
+    const ctxDoughnut = document.getElementById('graficoPlagio').getContext('2d');
+    new Chart(ctxDoughnut, {
+      type: 'doughnut',
+      data: {
+        labels: ['Párrafos con Plagio', 'Párrafos sin Plagio'],
+        datasets: [{
+          data: [alto, bajo],
+          backgroundColor: ['#7b1fa2', '#fff176'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: '#fff' } },
+          title: {
+            display: true,
+            text: 'Resumen Visual de Plagio',
+            color: '#fff'
+          }
+        }
+      }
+    });
+
+    const ctxBar = document.getElementById('graficoBarras').getContext('2d');
+    new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels: ['Párrafos con Plagio', 'Párrafos sin Plagio'],
+        datasets: [{
+          label: 'Cantidad de párrafos',
+          data: [alto, bajo],
+          backgroundColor: ['#7b1fa2', '#fff176'],
+          borderColor: ['#5a137a', '#cfc73f'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#fff' },
+            grid: { color: 'rgba(255,255,255,0.2)' }
+          },
+          x: {
+            ticks: { color: '#fff' },
+            grid: { display: false }
+          }
+        },
+        plugins: {
+          legend: { labels: { color: '#fff' } },
+          title: {
+            display: true,
+            text: 'Comparación de párrafos con y sin plagio',
+            color: '#fff'
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

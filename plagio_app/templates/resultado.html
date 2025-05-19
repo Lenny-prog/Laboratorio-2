@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado del Análisis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Resultado del Análisis de Plagio</h1>
+        <p>Porcentaje de similitud: <strong>{{ porcentaje }}%</strong></p>
+        <img src="{{ url_for('static', filename='grafico.png') }}" alt="Gráfico de similitud" style="width: 100%; max-width: 500px;">
+        <a href="/" class="btn-volver">Volver</a>
+    </div>
+</body>
+</html>
