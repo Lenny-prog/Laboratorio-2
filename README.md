@@ -1,6 +1,6 @@
-===============================
+
  DETECTOR DE PLAGIO EN PDF
-===============================
+
 
 Este proyecto es una aplicación web en Python que compara dos documentos PDF utilizando técnicas de Procesamiento de Lenguaje Natural (PLN) para detectar posibles plagios. Incluye análisis léxico, comparación de n-gramas y visualización de las palabras más frecuentes.
 
@@ -76,5 +76,11 @@ detector-plagio-pdf/
 │   └── procesamiento.py
 ├── requirements.txt
 └── README.txt
-
+Capturas de funcionamiento
 ![image](https://github.com/user-attachments/assets/198718d8-9635-4768-a266-570b533e545b)
+
+![image](https://github.com/user-attachments/assets/02059a5f-cb97-4173-b1c2-594d7b213ad6)
+
+![image](https://github.com/user-attachments/assets/3a85fc68-009e-4083-9bd3-dd80ac68c9ba)
+
+
